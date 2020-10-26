@@ -16,13 +16,6 @@
         android:layout_marginBottom="30dp"
         tools:ignore="VectorDrawableCompat" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/sec"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hi: "
-        android:textSize="23sp"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/days_recycler"
         android:layout_width="match_parent"

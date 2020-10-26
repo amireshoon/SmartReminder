@@ -10,6 +10,11 @@ import androidx.appcompat.widget.SwitchCompat;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
+import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
+import com.mohamadamin.persianmaterialdatetimepicker.time.RadialPickerLayout;
+import com.mohamadamin.persianmaterialdatetimepicker.time.TimePickerDialog;
+import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
+
 import java.util.Objects;
 
 import ap.behrouzi.smartr.database.DatabaseHelper;
@@ -44,6 +49,32 @@ public class AddNormalReminderActivity extends AppCompatActivity {
         submitButton.setOnClickListener( v -> {
             DatabaseHelper databaseHelper = new DatabaseHelper(AddNormalReminderActivity.this);
             databaseHelper.addNormalReminder(Objects.requireNonNull(reminderNameEditText.getText()).toString().trim(), "", 0, "","no","","","no");
+        });
+
+        timeChooser.setOnClickListener( v-> {
+            TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
+                    timeHolderTextView.setText(Integer.toString(hourOfDay) + Integer.toString(minute));
+                }
+            },24,60,true);
+            timePickerDialog.show(getFragmentManager(), "TimepickerDialog");
+        });
+
+        dateChooser.setOnClickListener( v-> {
+            PersianCalendar persianCalendar = new PersianCalendar();
+            DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
+                    new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+                            dateHolderTextView.setText(String.valueOf(year) + String.valueOf(monthOfYear) + String.valueOf(dayOfMonth));
+                        }
+                    },
+                    persianCalendar.getPersianYear(),
+                    persianCalendar.getPersianMonth(),
+                    persianCalendar.getPersianDay()
+            );
+            datePickerDialog.show(getFragmentManager(), "Datepickerdialog");
         });
     }
 }
