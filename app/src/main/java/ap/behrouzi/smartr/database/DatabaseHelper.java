@@ -1,8 +1,10 @@
 package ap.behrouzi.smartr.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -51,7 +53,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addNormalReminder() {
+    public void addNormalReminder(String rName, String rTime, int rRepeat, String rDate, String rDone, String rE2, String rLocation, String rIsLocational) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
 
+        cv.put(C_NAME, rName);
+        cv.put(C_TIME, rTime);
+        cv.put(C_REPEAT, rRepeat);
+        cv.put(C_DATE, rDate);
+        cv.put(C_DONE, rDone);
+        cv.put(C_EXTRA_2, rE2);
+        cv.put(C_LOCATION, rLocation);
+        cv.put(C_IS_LOCATIONAL, rIsLocational);
+        long result = db.insert(TABLE_NAME, null, cv);
+        if (result == -1) {
+            Toast.makeText(this.context, "Failed", Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(this.context, "Success", Toast.LENGTH_LONG).show();
+        }
     }
 }

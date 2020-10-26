@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:background="#ECECEC"
+    android:layout_marginBottom="4dp">
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/completed_check_box"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/reminder_name"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="نام رویداد"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/reminder_date_time"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="تاریخ و زمان رویداد"
+        android:layout_gravity="center_vertical"/>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/delete_reminder"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        app:srcCompat="@drawable/ic_baseline_delete_24"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_gravity="center_vertical"
+        android:tint="#E91E1E"/>
+
+</LinearLayout>

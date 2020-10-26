@@ -32,6 +32,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
+        android:id="@+id/date_choose_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -56,6 +57,7 @@
             android:textColor="@color/black"/>
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/date_holder_text_view"
             android:layout_weight="2"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -69,6 +71,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/time_choose_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -93,6 +96,7 @@
             android:textColor="@color/black"/>
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/time_holder_text_view"
             android:layout_weight="2"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -105,10 +109,55 @@
             android:layout_width="0dp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="#EAEAEA"
+        android:foreground="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        tools:targetApi="m"
+        android:layout_marginTop="16dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_baseline_add_24"
+            android:layout_gravity="center_vertical"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="فعالسازی آلارم"
+            android:layout_marginStart="16dp"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black"/>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_alarm"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+
     <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/reminder_name_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="نام رویداد"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="16dp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/reminder_link_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="لینک رویداد"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="16dp" />
@@ -125,6 +174,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/every_day_cb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"/>
@@ -141,6 +191,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/every_week_cb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"/>
@@ -157,6 +208,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/every_month_cb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"/>
@@ -173,6 +225,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/every_year_cb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"/>
@@ -184,6 +237,7 @@
         </LinearLayout>
     </LinearLayout>
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/submit_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ثبت"
