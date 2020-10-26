@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-public class databaseHelper extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper {
 
     private Context context;
     public static final String DATABASE_NAME = "smartReminder.db";
@@ -24,7 +24,7 @@ public class databaseHelper extends SQLiteOpenHelper {
     private static final String C_DATE = "_date";
     private static final String C_EXTRA_2 = "_extra2";
 
-    public databaseHelper(@Nullable Context context) {
+    public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
     }
@@ -49,5 +49,9 @@ public class databaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
+    }
+
+    public void addNormalReminder() {
+
     }
 }
