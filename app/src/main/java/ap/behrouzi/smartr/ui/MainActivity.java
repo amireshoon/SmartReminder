@@ -11,6 +11,7 @@ import com.google.android.material.tabs.TabLayout;
 import ap.behrouzi.smartr.R;
 import ap.behrouzi.smartr.adapters.ViewPagerAdapter;
 import ap.behrouzi.smartr.fragments.DaysFragment;
+import ap.behrouzi.smartr.utils.Splash;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,7 +22,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Splash.Builder splash = new Splash.Builder(this, getSupportActionBar());
+        splash.perform();
         tabLayout = findViewById(R.id.main_tab_layout);
         viewPager = findViewById(R.id.main_view_page);
 
