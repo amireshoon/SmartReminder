@@ -74,7 +74,8 @@ public class DaysFragment extends Fragment {
                         cursor.getString(6),
                         cursor.getString(8),
                         cursor.getString(4),
-                        cursor.getInt(3)
+                        cursor.getString(3),
+                        cursor.getString(8)
                         )
                 );
             }

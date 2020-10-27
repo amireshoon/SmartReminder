@@ -3,6 +3,9 @@ package ap.behrouzi.smartr.ui;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -29,6 +32,15 @@ public class MainActivity extends AppCompatActivity {
 
         getTabs();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "SmartReminderApp";
+            String desc = "For alarms and more on";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("smartreminder", name, importance);
+            channel.setDescription(desc);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     public void getTabs() {

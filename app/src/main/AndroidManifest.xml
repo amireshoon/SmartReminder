@@ -20,6 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".services.AlarmService" android:exported="false"/>
+        <receiver android:name=".services.ReminderBroadcast"/>
     </application>
 
 </manifest>

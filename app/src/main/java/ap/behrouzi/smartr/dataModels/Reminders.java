@@ -6,13 +6,14 @@ public class Reminders {
     private String name;
     private String time;
     private String date;
-    private int repeat;
+    private String repeat;
     private String location;
     private String isLocational;
     private String extra2;
     private String done;
+    private String alarm;
 
-    public Reminders(String name, String time, String date, String location, String isLocational, String extra2, String done, int repeat) {
+    public Reminders(String name, String time, String date, String location, String isLocational, String extra2, String done, String repeat, String alarm) {
         this.name = name;
         this.time = time;
         this.location = location;
@@ -21,6 +22,7 @@ public class Reminders {
         this.done = done;
         this.repeat = repeat;
         this.date = date;
+        this.alarm = alarm;
     }
 
     public String getDone() {
@@ -39,7 +41,7 @@ public class Reminders {
         return location;
     }
 
-    public int getRepeat() {
+    public String getRepeat() {
         return repeat;
     }
 
@@ -53,5 +55,9 @@ public class Reminders {
 
     public String getName() {
         return name;
+    }
+
+    public String getAlarm() {
+        return alarm;
     }
 }

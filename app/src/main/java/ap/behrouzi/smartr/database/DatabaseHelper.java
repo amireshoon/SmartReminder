@@ -26,6 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String C_DONE = "_done";
     private static final String C_DATE = "_date";
     private static final String C_EXTRA_2 = "_extra2";
+    private static final String C_ALARM = "_alarm";
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -39,12 +40,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         " (" + C_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         C_NAME + " TEXT, " +
                         C_TIME + " TEXT, " +
-                        C_REPEAT + " INT, " +
+                        C_REPEAT + " TEXT, " +
                         C_DONE + " TEXT, " +
                         C_IS_LOCATIONAL + " TEXT, " +
                         C_LOCATION + " TEXT, " +
                         C_DATE + " TEXT, " +
-                        C_EXTRA_2 + " TEXT);";
+                        C_EXTRA_2 + " TEXT, " +
+                        C_ALARM + " TEXT);";
         db.execSQL(query);
     }
 
@@ -54,7 +56,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addNormalReminder(String rName, String rTime, int rRepeat, String rDate, String rDone, String rE2, String rLocation, String rIsLocational) {
+    public void addNormalReminder(String rName, String rTime, String rRepeat, String rDate, String rDone, String rE2, String rLocation, String rIsLocational, String alarm) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -66,6 +68,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(C_EXTRA_2, rE2);
         cv.put(C_LOCATION, rLocation);
         cv.put(C_IS_LOCATIONAL, rIsLocational);
+        cv.put(C_ALARM, alarm);
         long result = db.insert(TABLE_NAME, null, cv);
         if (result == -1) {
             Toast.makeText(this.context, "Failed", Toast.LENGTH_LONG).show();
