@@ -21,6 +21,9 @@ import com.mohamadamin.persianmaterialdatetimepicker.time.RadialPickerLayout;
 import com.mohamadamin.persianmaterialdatetimepicker.time.TimePickerDialog;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -107,7 +110,8 @@ public class AddNormalReminderActivity extends AppCompatActivity {
                     "no",
                     alarm
                     );
-            addReminder(Integer.parseInt(time[0]), Integer.parseInt(time[1]), dates.getiDay(), dates.getiMonth(), dates.getiYear());
+
+            addReminder(Integer.parseInt(time[0]), Integer.parseInt(time[1]), dates.getiDay(), dates.getiMonth(), dates.getiYear(),reminderLinkEditText.getText().toString().trim(), reminderNameEditText.getText().toString().trim(),databaseHelper.getLatestRecord());
         });
     }
 
@@ -152,43 +156,31 @@ public class AddNormalReminderActivity extends AppCompatActivity {
         return s.toString().trim();
     }
 
-    private void addReminder(int hour, int min, int day, int mon, int year) {
-//        Intent myIntent = new Intent(this , AlarmService.class);
-//        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-//        PendingIntent pendingIntent = PendingIntent.getService(this, 0, myIntent, 0);
-//
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MINUTE, min);
-
-        if (hour > 12) {
-            int ampmhour = hour - 12;
-            Log.e("ERROR", "addReminder: PM " + ampmhour);
-            calendar.set(Calendar.HOUR, ampmhour);
-            calendar.set(Calendar.AM_PM, Calendar.PM);
-        }else {
-            Log.e("ERROR", "addReminder: AM " + hour);
-            calendar.set(Calendar.HOUR, hour);
-            calendar.set(Calendar.AM_PM, Calendar.AM);
+    private void addReminder(int hour, int min, int day, int mon, int year, String link, String name, int id) {
+        String str_date=mon+"-"+day+"-"+year+" "+hour+":"+min+":"+"00";
+        @SuppressLint("SimpleDateFormat") DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy kk:mm:ss");
+        Date date = null;
+        try {
+            date = (Date)formatter.parse(str_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-
-//
-//        calendar.add(Calendar.DAY_OF_MONTH, day);
-//        calendar.add(Calendar.MONTH, mon);
-//        calendar.add(Calendar.YEAR, year);
-//        Log.e("ERROR", "addReminder: " + min + hour + day);
-//
-
-
-
+        assert date != null;
+        long output=date.getTime()/1000L;
+        String str=Long.toString(output);
+        long timestamp = Long.parseLong(str) * 1000;
+        long curr = System.currentTimeMillis();
+        Log.e("TIME", "addReminder: Curr: " + curr + " / then: " + timestamp);
         Intent intent = new Intent(AddNormalReminderActivity.this, ReminderBroadcast.class);
+        intent.putExtra("reminder_id", id);
+        intent.putExtra("reminder_name", name);
+        intent.putExtra("reminder_link", link);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(AddNormalReminderActivity.this,0,intent,0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000*60 , pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP,
+                timestamp,
+                pendingIntent);
         Toast.makeText(AddNormalReminderActivity.this, "Heyyyyyyy", Toast.LENGTH_SHORT).show();
-        Log.e("ERROR", "addReminder: " + calendar.getTimeInMillis());
-//        alarmManager.set(AlarmManager.RTC_WAKEUP,
-//                calendar.getTimeInMillis(),
-//                pendingIntent);
+        Log.e("ERROR", "addReminder: " + timestamp);
     }
 }

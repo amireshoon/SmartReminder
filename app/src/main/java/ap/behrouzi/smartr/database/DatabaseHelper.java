@@ -87,4 +87,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return cursor;
     }
+
+    public int getLatestRecord() {
+        String query = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + C_ID + " DESC LIMIT 1";
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if (db != null) {
+            cursor = db.rawQuery(query, null);
+        }
+
+        assert cursor != null;
+        if (cursor.getCount() == 0) {
+            return 0;
+        }else {
+            int i = 0;
+            if(cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                 i = cursor.getInt(cursor.getColumnIndex(C_ID));
+                 cursor.close();
+            }
+            return i;
+        }
+    }
 }

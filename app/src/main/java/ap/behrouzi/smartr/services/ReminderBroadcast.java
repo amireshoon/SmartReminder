@@ -14,8 +14,8 @@ public class ReminderBroadcast extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "smartreminder")
                 .setSmallIcon(R.drawable.ic_baseline_add_24)
-                .setContentTitle("Test")
-                .setContentText("Ohh shit here we go again!")
+                .setContentTitle(intent.getStringExtra("reminder_name") + intent.getIntExtra("reminder_id", 0))
+                .setContentText("Ohh shit here we go again!" + intent.getStringExtra("reminder_link"))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
