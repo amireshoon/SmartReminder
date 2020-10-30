@@ -1,15 +1,22 @@
 package ap.behrouzi.smartr.services;
 
+import android.annotation.SuppressLint;
+import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.PowerManager;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import ap.behrouzi.smartr.AddNormalReminderActivity;
 import ap.behrouzi.smartr.R;
 
 public class ReminderBroadcast extends BroadcastReceiver {
+    @SuppressLint("InvalidWakeLockTag")
     @Override
     public void onReceive(Context context, Intent intent) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "smartreminder")
@@ -20,5 +27,8 @@ public class ReminderBroadcast extends BroadcastReceiver {
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.notify(1,builder.build());
+
     }
+
+
 }

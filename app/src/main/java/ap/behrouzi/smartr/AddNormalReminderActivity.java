@@ -9,10 +9,14 @@ import androidx.appcompat.widget.SwitchCompat;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.KeyguardManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -171,15 +175,32 @@ public class AddNormalReminderActivity extends AppCompatActivity {
         long timestamp = Long.parseLong(str) * 1000;
         long curr = System.currentTimeMillis();
         Log.e("TIME", "addReminder: Curr: " + curr + " / then: " + timestamp);
-        Intent intent = new Intent(AddNormalReminderActivity.this, ReminderBroadcast.class);
+//        Intent intent = new Intent(AddNormalReminderActivity.this, ReminderBroadcast.class);
+//        intent.putExtra("reminder_id", id);
+//        intent.putExtra("reminder_name", name);
+//        intent.putExtra("reminder_link", link);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(AddNormalReminderActivity.this,0,intent,0);
+//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+
+        Intent intent = new Intent(this, ReminderBroadcast.class);
         intent.putExtra("reminder_id", id);
         intent.putExtra("reminder_name", name);
         intent.putExtra("reminder_link", link);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(AddNormalReminderActivity.this,0,intent,0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP,
+        PendingIntent pending = PendingIntent.getBroadcast(this, id, intent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60000, pending);
+
+//        alarmManager.set(AlarmManager.RTC_WAKEUP,
+//                timestamp,
+//                pendingIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarm.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,timestamp,pending);
+        }else {
+            alarm.set(AlarmManager.RTC_WAKEUP,
                 timestamp,
-                pendingIntent);
+                    pending);
+        }
         Toast.makeText(AddNormalReminderActivity.this, "Heyyyyyyy", Toast.LENGTH_SHORT).show();
         Log.e("ERROR", "addReminder: " + timestamp);
     }
