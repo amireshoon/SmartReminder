@@ -31,12 +31,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Objects;
 
 import ap.behrouzi.smartr.database.DatabaseHelper;
 import ap.behrouzi.smartr.services.AlarmService;
 import ap.behrouzi.smartr.services.ReminderBroadcast;
 import ap.behrouzi.smartr.utils.Jdate;
+import ap.behrouzi.smartr.utils.PDate;
 
 public class AddNormalReminderActivity extends AppCompatActivity {
 
@@ -48,6 +50,7 @@ public class AddNormalReminderActivity extends AppCompatActivity {
     SwitchCompat alarmCombat;
     Jdate.DateFormat dates;
     String[] time = new String[2];
+    int[] dw;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,17 +87,33 @@ public class AddNormalReminderActivity extends AppCompatActivity {
         });
 
         dateChooser.setOnClickListener( v-> {
+//            dates = Jdate.jalali_to_gregorian(year, monthOfYear, dayOfMonth, true);
+//            dateHolderTextView.setText(dates.getsYear() + "/" + dates.getsMonth() + "/" + dates.getsDay());
+
+//            datePickerDialog.show(getFragmentManager(), "Datepickerdialog");
             PersianCalendar persianCalendar = new PersianCalendar();
             DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
-                    (view, year, monthOfYear, dayOfMonth) -> {
-                        dates = Jdate.jalali_to_gregorian(year, monthOfYear, dayOfMonth, true);
-                        dateHolderTextView.setText(dates.getsYear() + "/" + dates.getsMonth() + "/" + dates.getsDay());
+                    new DatePickerDialog.OnDateSetListener() {
+                        @SuppressLint("SetTextI18n")
+                        @Override
+                        public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+                            dateHolderTextView.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
+                            dw = PDate.jalali_to_gregorian(year,(monthOfYear + 1),dayOfMonth);
+                            Log.e("TIME", "onDateSet: On Formattred: " + dw[0] + '/' + dw[2] + '/' + dw[1]);
+
+                            persianCalendar.set(Calendar.YEAR,dw[0]);
+                            persianCalendar.set(Calendar.DAY_OF_MONTH,dw[2]);
+                            persianCalendar.set(Calendar.MONTH,dw[1]);
+
+                            Log.e("TIME", "onDateSet: " + persianCalendar.getTimeInMillis());
+                        }
                     },
                     persianCalendar.getPersianYear(),
                     persianCalendar.getPersianMonth(),
                     persianCalendar.getPersianDay()
             );
             datePickerDialog.show(getFragmentManager(), "Datepickerdialog");
+
         });
 
         submitButton.setOnClickListener( v -> {
@@ -107,7 +126,7 @@ public class AddNormalReminderActivity extends AppCompatActivity {
                     Objects.requireNonNull(reminderNameEditText.getText()).toString().trim(),
                     time[0] + "-" + time[1],
                     separateComma(getRepeatMode()),
-                    dates.getsYear() + "-" + dates.getsMonth() + "-" + dates.getsDay(),
+                    dw[0] + "-" + dw[1] + "-" + dw[2],
                     "no",
                     reminderLinkEditText.toString().trim(),
                     "",
@@ -115,7 +134,7 @@ public class AddNormalReminderActivity extends AppCompatActivity {
                     alarm
                     );
 
-            addReminder(Integer.parseInt(time[0]), Integer.parseInt(time[1]), dates.getiDay(), dates.getiMonth(), dates.getiYear(),reminderLinkEditText.getText().toString().trim(), reminderNameEditText.getText().toString().trim(),databaseHelper.getLatestRecord());
+            addReminder(Integer.parseInt(time[0]), Integer.parseInt(time[1]), dw[2], dw[1], dw[0],reminderLinkEditText.getText().toString().trim(), reminderNameEditText.getText().toString().trim(),databaseHelper.getLatestRecord());
         });
     }
 
@@ -160,6 +179,7 @@ public class AddNormalReminderActivity extends AppCompatActivity {
         return s.toString().trim();
     }
 
+    @SuppressLint({"SimpleDateFormat", "ShortAlarm"})
     private void addReminder(int hour, int min, int day, int mon, int year, String link, String name, int id) {
         String str_date=mon+"-"+day+"-"+year+" "+hour+":"+min+":"+"00";
         @SuppressLint("SimpleDateFormat") DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy kk:mm:ss");
@@ -189,19 +209,27 @@ public class AddNormalReminderActivity extends AppCompatActivity {
         intent.putExtra("reminder_link", link);
         PendingIntent pending = PendingIntent.getBroadcast(this, id, intent, PendingIntent.FLAG_ONE_SHOT);
         AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarm.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 60000, pending);
+        long epoch = 0;
+        PersianCalendar persianCalendar = new PersianCalendar();
+        try {
+            epoch = Objects.requireNonNull(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(dw[1] + "/" + dw[2] +"/" +dw[0]+ " " + hour + ":"+min+":00")).getTime() / 1000;
+            Log.e("TIME", "onDateSet:On " + epoch);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, epoch, 60000, pending);
 
 //        alarmManager.set(AlarmManager.RTC_WAKEUP,
 //                timestamp,
 //                pendingIntent);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarm.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,timestamp,pending);
+            alarm.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,epoch,pending);
         }else {
             alarm.set(AlarmManager.RTC_WAKEUP,
                 timestamp,
                     pending);
         }
         Toast.makeText(AddNormalReminderActivity.this, "Heyyyyyyy", Toast.LENGTH_SHORT).show();
-        Log.e("ERROR", "addReminder: " + timestamp);
+        Log.e("ERROR", "Set time: " + epoch);
     }
 }
