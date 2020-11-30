@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.SwitchCompat;
 
@@ -71,6 +72,10 @@ public class AddNormalReminderActivity extends AppCompatActivity {
         panjShanbeh = findViewById(R.id.p_sh);
         jome = findViewById(R.id.jome);
         alarmCombat = findViewById(R.id.switch_alarm);
+
+        findViewById(R.id.back_button).setOnClickListener( v -> {
+            finish();
+        });
 
         timeChooser.setOnClickListener( v-> {
             Calendar c = Calendar.getInstance();

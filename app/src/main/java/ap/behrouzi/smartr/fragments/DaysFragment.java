@@ -120,6 +120,7 @@ public class DaysFragment extends Fragment {
                         reminders.remove(position);
                         remindersAdapter.notifyItemRemoved(position);
                         remindersAdapter.notifyItemRangeChanged(position, reminders.size());
+                        onResume();
                     })
                     .setNegativeButton("انصراف", (dialog, which) -> {
 

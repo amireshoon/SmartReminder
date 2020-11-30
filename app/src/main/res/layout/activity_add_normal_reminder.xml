@@ -22,6 +22,7 @@
                 android:textColor="@color/white"/>
 
             <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/back_button"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24"
