@@ -70,7 +70,7 @@ public class RemindersAdapter extends RecyclerView.Adapter<RemindersAdapter.MyVi
                     if(deletedListener != null) {
                         int position = getAdapterPosition();
                         if(position != RecyclerView.NO_POSITION) {
-                            deletedListener.onDeleted(reminders.get(position));
+                            deletedListener.onDeleted(reminders.get(position), getAdapterPosition());
                         }
                     }
                 }
@@ -97,7 +97,7 @@ public class RemindersAdapter extends RecyclerView.Adapter<RemindersAdapter.MyVi
 
 
     public interface onDeletedListener {
-        void onDeleted(Reminders reminders);
+        void onDeleted(Reminders reminders, int position);
     }
 
     public void setOnDeletedListener(onDeletedListener listener) {

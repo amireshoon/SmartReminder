@@ -1,6 +1,7 @@
 package ap.behrouzi.smartr.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -21,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import ap.behrouzi.smartr.AddNormalReminderActivity;
 import ap.behrouzi.smartr.R;
@@ -31,7 +34,10 @@ import ap.behrouzi.smartr.database.DatabaseHelper;
 public class DaysFragment extends Fragment {
 
     private int day;
-
+    private RecyclerView recyclerView;
+    private ArrayList<Reminders> reminders;
+    private DatabaseHelper db;
+    private RemindersAdapter remindersAdapter;
     public static DaysFragment newInstance(int day) {
         DaysFragment daysFragment = new DaysFragment();
 
@@ -56,11 +62,11 @@ public class DaysFragment extends Fragment {
             intent.putExtra("from", getArguments().getInt("day", 0));
             startActivity(intent);
         });
-        RecyclerView recyclerView = view.findViewById(R.id.days_recycler);
+        recyclerView = view.findViewById(R.id.days_recycler);
 
-        ArrayList<Reminders> reminders = new ArrayList<>();
+        reminders = new ArrayList<>();
 
-        DatabaseHelper db = new DatabaseHelper(getContext());
+        db = new DatabaseHelper(getContext());
         Cursor cursor = db.readAllData();
         if (cursor.getCount() == 0) {
             Toast.makeText(getActivity(), "No Data.", Toast.LENGTH_SHORT).show();
@@ -75,13 +81,14 @@ public class DaysFragment extends Fragment {
                         cursor.getString(8),
                         cursor.getString(4),
                         cursor.getString(3),
-                        cursor.getString(8)
+                        cursor.getString(8),
+                        cursor.getInt(0)
                         )
                 );
             }
         }
 
-        RemindersAdapter remindersAdapter = new RemindersAdapter(getContext(),reminders);
+        remindersAdapter = new RemindersAdapter(getContext(),reminders);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setHasFixedSize(true);
@@ -97,13 +104,56 @@ public class DaysFragment extends Fragment {
                 Toast.makeText(getActivity(), "Checked: " + isChecked, Toast.LENGTH_SHORT).show();
             }
         });
+        remindersAdapter.setOnDeletedListener((reminders12, position) -> {
 
-        remindersAdapter.setOnDeletedListener(new RemindersAdapter.onDeletedListener() {
-            @Override
-            public void onDeleted(Reminders reminders) {
-                Toast.makeText(getActivity(), "Delete", Toast.LENGTH_SHORT).show();
-            }
+        });
+        remindersAdapter.setOnDeletedListener((reminders1, position) -> {
+//            Toast.makeText(getActivity(), "Delete", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+            builder.setTitle("پاک کردن هشدار")
+                    .setMessage("درصورت حذف کردن هشدار شما قادر به برگرداندن آن نیستید!")
+                    .setPositiveButton("حذف", (dialog, which) -> {
+                        Toast.makeText(getActivity(), "هشدار " + reminders1.getName()  + " با موفقیت پاک شد. ", Toast.LENGTH_SHORT).show();
+                        db.removeRow(reminders1.getId());
+                        reminders.remove(position);
+                        remindersAdapter.notifyItemRemoved(position);
+                        remindersAdapter.notifyItemRangeChanged(position, reminders.size());
+                    })
+                    .setNegativeButton("انصراف", (dialog, which) -> {
+
+                    });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        reminders.clear();
+
+        Cursor cursor = db.readAllData();
+        if (cursor.getCount() == 0) {
+            Toast.makeText(getActivity(), "No Data.", Toast.LENGTH_SHORT).show();
+        }else {
+            while (cursor.moveToNext()) {
+                reminders.add(new Reminders(
+                                cursor.getString(1),
+                                cursor.getString(2),
+                                cursor.getString(7),
+                                cursor.getString(5),
+                                cursor.getString(6),
+                                cursor.getString(8),
+                                cursor.getString(4),
+                                cursor.getString(3),
+                                cursor.getString(8),
+                                cursor.getInt(0)
+                        )
+                );
+            }
+        }
+
+        recyclerView.setAdapter(remindersAdapter);
     }
 }

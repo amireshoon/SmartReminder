@@ -110,4 +110,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return i;
         }
     }
+
+    public void removeRow(int id) {
+        String query = "DELETE FROM " + TABLE_NAME + " WHERE " + C_ID + " = " + id;
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(query);
+    }
 }
