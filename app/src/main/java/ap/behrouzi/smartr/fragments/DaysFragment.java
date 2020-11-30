@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -38,6 +39,8 @@ public class DaysFragment extends Fragment {
     private ArrayList<Reminders> reminders;
     private DatabaseHelper db;
     private RemindersAdapter remindersAdapter;
+    private LottieAnimationView lottieAnimationView;
+    private AppCompatTextView   emptyTextView;
     public static DaysFragment newInstance(int day) {
         DaysFragment daysFragment = new DaysFragment();
 
@@ -62,6 +65,8 @@ public class DaysFragment extends Fragment {
             intent.putExtra("from", getArguments().getInt("day", 0));
             startActivity(intent);
         });
+        lottieAnimationView = view.findViewById(R.id.empty_animations);
+        emptyTextView = view.findViewById(R.id.empty_text);
         recyclerView = view.findViewById(R.id.days_recycler);
 
         reminders = new ArrayList<>();
@@ -69,8 +74,11 @@ public class DaysFragment extends Fragment {
         db = new DatabaseHelper(getContext());
         Cursor cursor = db.readAllData();
         if (cursor.getCount() == 0) {
-            Toast.makeText(getActivity(), "No Data.", Toast.LENGTH_SHORT).show();
+            lottieAnimationView.setVisibility(View.VISIBLE);
+            emptyTextView.setVisibility(View.VISIBLE);
         }else {
+            lottieAnimationView.setVisibility(View.GONE);
+            emptyTextView.setVisibility(View.GONE);
             while (cursor.moveToNext()) {
                 reminders.add(new Reminders(
                         cursor.getString(1),
@@ -98,17 +106,11 @@ public class DaysFragment extends Fragment {
 
         recyclerView.setAdapter(remindersAdapter);
 
-        remindersAdapter.setOnItemCheckedListener(new RemindersAdapter.onItemCheckedListener() {
-            @Override
-            public void onItemChecked(Reminders reminders, boolean isChecked) {
-                Toast.makeText(getActivity(), "Checked: " + isChecked, Toast.LENGTH_SHORT).show();
-            }
+        remindersAdapter.setOnItemCheckedListener((reminders, isChecked) ->{
+            db.changeAlarmStatus(reminders.getId(), (isChecked)?"yes":"no");
         });
-        remindersAdapter.setOnDeletedListener((reminders12, position) -> {
 
-        });
         remindersAdapter.setOnDeletedListener((reminders1, position) -> {
-//            Toast.makeText(getActivity(), "Delete", Toast.LENGTH_SHORT).show();
             AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
             builder.setTitle("پاک کردن هشدار")
                     .setMessage("درصورت حذف کردن هشدار شما قادر به برگرداندن آن نیستید!")
@@ -135,8 +137,11 @@ public class DaysFragment extends Fragment {
 
         Cursor cursor = db.readAllData();
         if (cursor.getCount() == 0) {
-            Toast.makeText(getActivity(), "No Data.", Toast.LENGTH_SHORT).show();
+            lottieAnimationView.setVisibility(View.VISIBLE);
+            emptyTextView.setVisibility(View.VISIBLE);
         }else {
+            lottieAnimationView.setVisibility(View.GONE);
+            emptyTextView.setVisibility(View.GONE);
             while (cursor.moveToNext()) {
                 reminders.add(new Reminders(
                                 cursor.getString(1),

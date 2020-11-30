@@ -116,4 +116,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(query);
     }
+
+    public void changeAlarmStatus(int id, String status) {
+        String query = "UPDATE " + TABLE_NAME + " SET " + C_DONE + " = '" + status + "' WHERE " + C_ID + " = " + id;
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(query);
+    }
+
 }

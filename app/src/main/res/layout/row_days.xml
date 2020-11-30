@@ -21,4 +21,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/empty_animations"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        app:lottie_rawRes="@raw/empty_state"
+        app:lottie_autoPlay="true"
+        app:lottie_repeatMode="reverse"
+        app:lottie_loop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:visibility="visible" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/empty_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="هشداری وجود ندارد. با استفاده از دکمه + اقدام به ساخت یک هشدار کنید."
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_below="@id/empty_animations"
+        android:layout_marginTop="-50dp"
+        android:visibility="visible"
+        android:textColor="@color/black"
+        android:gravity="center"/>
 </RelativeLayout>
