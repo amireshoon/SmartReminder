@@ -11,6 +11,8 @@ import android.os.Handler;
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.Calendar;
+
 import ap.behrouzi.smartr.R;
 import ap.behrouzi.smartr.adapters.ViewPagerAdapter;
 import ap.behrouzi.smartr.fragments.DaysFragment;
@@ -62,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
             viewPagerAdapter.addFragment(jome, "جمعه");
             viewPager.setAdapter(viewPagerAdapter);
             tabLayout.setupWithViewPager(viewPager);
+            Calendar calendar = Calendar.getInstance();
+            int day = calendar.get(Calendar.DAY_OF_WEEK);
+            viewPager.setCurrentItem(day,true);
         });
 
     }
