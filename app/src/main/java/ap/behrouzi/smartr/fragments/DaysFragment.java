@@ -31,6 +31,7 @@ import ap.behrouzi.smartr.R;
 import ap.behrouzi.smartr.adapters.RemindersAdapter;
 import ap.behrouzi.smartr.dataModels.Reminders;
 import ap.behrouzi.smartr.database.DatabaseHelper;
+import ap.behrouzi.smartr.utils.Jdate;
 
 public class DaysFragment extends Fragment {
 
@@ -47,7 +48,6 @@ public class DaysFragment extends Fragment {
         Bundle args = new Bundle();
         args.putInt("day", day);
         daysFragment.setArguments(args);
-
         return daysFragment;
     }
     @Override
@@ -63,6 +63,7 @@ public class DaysFragment extends Fragment {
         floatingActionButton.setOnClickListener( v-> {
             Intent intent = new Intent(getActivity(), AddNormalReminderActivity.class);
             intent.putExtra("from", getArguments().getInt("day", 0));
+            intent.putExtra("whichDay", Jdate.getDayOfWeek(getArguments().getInt("day", 0)));
             startActivity(intent);
         });
         lottieAnimationView = view.findViewById(R.id.empty_animations);
@@ -72,7 +73,7 @@ public class DaysFragment extends Fragment {
         reminders = new ArrayList<>();
 
         db = new DatabaseHelper(getContext());
-        Cursor cursor = db.readAllData();
+        Cursor cursor = db.readAllData(Jdate.getDayOfWeek(getArguments().getInt("day", 0)));
         if (cursor.getCount() == 0) {
             lottieAnimationView.setVisibility(View.VISIBLE);
             emptyTextView.setVisibility(View.VISIBLE);
@@ -136,7 +137,7 @@ public class DaysFragment extends Fragment {
         super.onResume();
         reminders.clear();
 
-        Cursor cursor = db.readAllData();
+        Cursor cursor = db.readAllData(Jdate.getDayOfWeek(getArguments().getInt("day", 0)));
         if (cursor.getCount() == 0) {
             lottieAnimationView.setVisibility(View.VISIBLE);
             emptyTextView.setVisibility(View.VISIBLE);

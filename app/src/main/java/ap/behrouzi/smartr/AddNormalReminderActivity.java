@@ -52,6 +52,7 @@ public class AddNormalReminderActivity extends AppCompatActivity {
     Jdate.DateFormat dates;
     String[] time = new String[2];
     int[] dw;
+    String dayOfWeek = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +77,8 @@ public class AddNormalReminderActivity extends AppCompatActivity {
         findViewById(R.id.back_button).setOnClickListener( v -> {
             finish();
         });
-
+        Intent intent = getIntent();
+        dayOfWeek = intent.getStringExtra("whichDay");
         timeChooser.setOnClickListener( v-> {
             Calendar c = Calendar.getInstance();
             TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(new TimePickerDialog.OnTimeSetListener() {
@@ -140,7 +142,7 @@ public class AddNormalReminderActivity extends AppCompatActivity {
                         Objects.requireNonNull(reminderNameEditText.getText()).toString().trim(),
                         time[0] + "-" + time[1],
                         separateComma(getRepeatMode()),
-                        "", //dw[0] + "-" + dw[1] + "-" + dw[2]
+                        dayOfWeek, //dw[0] + "-" + dw[1] + "-" + dw[2]
                         "no",
                         reminderLinkEditText.toString().trim(),
                         "",

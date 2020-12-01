@@ -88,6 +88,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public Cursor readAllData(String day) {
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + "_date" + " = '" + day + "'";
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if (db != null) {
+            cursor = db.rawQuery(query, null);
+        }
+        return cursor;
+    }
+
     public int getLatestRecord() {
         String query = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + C_ID + " DESC LIMIT 1";
         SQLiteDatabase db = this.getReadableDatabase();

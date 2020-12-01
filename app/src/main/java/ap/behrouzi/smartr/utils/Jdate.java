@@ -4,6 +4,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import java.util.Calendar;
+
 /**
  * Jdate Provided by Amirhossein Meydani
  * @license MIT LICENSE
@@ -44,6 +46,50 @@ public class Jdate {
             }
         }
         return new DateFormat(dates[0], dates[1], dates[2], bd[0], bd[1], bd[2], b);
+    }
+
+    public static String getDayOfWeek() {
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        switch (day) {
+            case 0:
+                return "shanbeh";
+            case 1:
+                return "1shanbeh";
+            case 2:
+                return "2shanbeh";
+            case 3:
+                return "3shanbeh";
+            case 4:
+                return "4shanbeh";
+            case 5:
+                return "5shanbeh";
+            case 6:
+                return "jome";
+            default:
+                return "shanbeh";
+        }
+    }
+
+    public static String getDayOfWeek(int preferDay) {
+        switch (preferDay) {
+            case 0:
+                return "shanbeh";
+            case 1:
+                return "1shanbeh";
+            case 2:
+                return "2shanbeh";
+            case 3:
+                return "3shanbeh";
+            case 4:
+                return "4shanbeh";
+            case 5:
+                return "5shanbeh";
+            case 6:
+                return "jome";
+            default:
+                return "shanbeh";
+        }
     }
 
     public static DateFormat jalali_to_gregorian(int jy, int jm, int jd, @Nullable boolean beautify) {
