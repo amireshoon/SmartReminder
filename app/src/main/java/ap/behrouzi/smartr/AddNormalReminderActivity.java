@@ -124,13 +124,10 @@ public class AddNormalReminderActivity extends AppCompatActivity {
         });
 
         submitButton.setOnClickListener( v -> {
-            if (time[0] == null || time[1] == null || reminderLinkEditText.getText().toString().equals("") || reminderNameEditText.getText().toString().equals("")) {
+            if (time[0] == null || time[1] == null  || reminderNameEditText.getText().toString().equals("")) {
                 Toast.makeText(AddNormalReminderActivity.this, "نام و زمان هشدار الزامی میباشد!", Toast.LENGTH_SHORT).show();
                 if (reminderNameEditText.getText().toString().equals("")) {
                     reminderNameEditText.setError("نام هشدار اجباری میباشد!");
-                }
-                if (reminderLinkEditText.getText().toString().equals("")) {
-                    reminderLinkEditText.setError("لینک هشدار اجباری میباشد!");
                 }
             }else {
                 DatabaseHelper databaseHelper = new DatabaseHelper(AddNormalReminderActivity.this);

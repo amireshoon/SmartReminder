@@ -43,7 +43,7 @@ public class RemindersAdapter extends RecyclerView.Adapter<RemindersAdapter.MyVi
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.reminderName.setText(reminders.get(position).getName());
-        holder.reminderDateTime.setText(reminders.get(position).getDate() + reminders.get(position).getTime());
+        holder.reminderDateTime.setText(reminders.get(position).getTime());
         Log.e("LIST", "onBindViewHolder: " + reminders.get(position).getDone());
         holder.isDone.setChecked(reminders.get(position).getDone().equals("yes"));
         if (holder.isDone.isChecked()) {
