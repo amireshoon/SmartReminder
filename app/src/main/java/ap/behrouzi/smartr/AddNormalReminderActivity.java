@@ -122,24 +122,36 @@ public class AddNormalReminderActivity extends AppCompatActivity {
         });
 
         submitButton.setOnClickListener( v -> {
-            DatabaseHelper databaseHelper = new DatabaseHelper(AddNormalReminderActivity.this);
-            String alarm = "no";
-            if (alarmCombat.isChecked()) {
-                alarm = "yes";
-            }
-            databaseHelper.addNormalReminder(
-                    Objects.requireNonNull(reminderNameEditText.getText()).toString().trim(),
-                    time[0] + "-" + time[1],
-                    separateComma(getRepeatMode()),
-                    dw[0] + "-" + dw[1] + "-" + dw[2],
-                    "no",
-                    reminderLinkEditText.toString().trim(),
-                    "",
-                    "no",
-                    alarm
-                    );
+            if (time[0] == null || time[1] == null || reminderLinkEditText.getText().toString().equals("") || reminderNameEditText.getText().toString().equals("")) {
+                Toast.makeText(AddNormalReminderActivity.this, "نام و زمان هشدار الزامی میباشد!", Toast.LENGTH_SHORT).show();
+                if (reminderNameEditText.getText().toString().equals("")) {
+                    reminderNameEditText.setError("نام هشدار اجباری میباشد!");
+                }
+                if (reminderLinkEditText.getText().toString().equals("")) {
+                    reminderLinkEditText.setError("لینک هشدار اجباری میباشد!");
+                }
+            }else {
+                DatabaseHelper databaseHelper = new DatabaseHelper(AddNormalReminderActivity.this);
+                String alarm = "no";
+                if (alarmCombat.isChecked()) {
+                    alarm = "yes";
+                }
+                databaseHelper.addNormalReminder(
+                        Objects.requireNonNull(reminderNameEditText.getText()).toString().trim(),
+                        time[0] + "-" + time[1],
+                        separateComma(getRepeatMode()),
+                        "", //dw[0] + "-" + dw[1] + "-" + dw[2]
+                        "no",
+                        reminderLinkEditText.toString().trim(),
+                        "",
+                        "no",
+                        alarm
+                );
 
-            addReminder(Integer.parseInt(time[0]), Integer.parseInt(time[1]), dw[2], dw[1], dw[0],reminderLinkEditText.getText().toString().trim(), reminderNameEditText.getText().toString().trim(),databaseHelper.getLatestRecord());
+//                addReminder(Integer.parseInt(time[0]), Integer.parseInt(time[1]), dw[2], dw[1], dw[0],reminderLinkEditText.getText().toString().trim(), reminderNameEditText.getText().toString().trim(),databaseHelper.getLatestRecord());
+                addReminder(Integer.parseInt(time[0]), Integer.parseInt(time[1]), 0, 0, 0,reminderLinkEditText.getText().toString().trim(), reminderNameEditText.getText().toString().trim(),databaseHelper.getLatestRecord());
+            }
+            
         });
     }
 
@@ -249,12 +261,14 @@ public class AddNormalReminderActivity extends AppCompatActivity {
         calendar.set(Calendar.MINUTE, min);
         calendar.set(Calendar.DAY_OF_MONTH, day);
         calendar.set(Calendar.MONTH, mon);
-        Toast.makeText(this, Integer.toString(min), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, Integer.toString(min), Toast.LENGTH_SHORT).show();
         Log.e("TIME", "addReminder: " + calendar.getTimeInMillis());
 
 // setRepeating() lets you specify a precise custom interval--in this case,
 // 20 minutes.
         alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 1000 * 60 * 20, alarmIntent);
+
+        finish();
     }
 }
