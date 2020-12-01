@@ -1,11 +1,14 @@
 package ap.behrouzi.smartr.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.ColorSpace;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatCheckBox;
@@ -43,7 +46,9 @@ public class RemindersAdapter extends RecyclerView.Adapter<RemindersAdapter.MyVi
         holder.reminderDateTime.setText(reminders.get(position).getDate() + reminders.get(position).getTime());
         Log.e("LIST", "onBindViewHolder: " + reminders.get(position).getDone());
         holder.isDone.setChecked(reminders.get(position).getDone().equals("yes"));
-
+        if (holder.isDone.isChecked()) {
+            holder.reminderBackgroundLinearLayout.setBackgroundColor(Color.rgb(33,150,243));
+        }
     }
 
     @Override
@@ -56,6 +61,7 @@ public class RemindersAdapter extends RecyclerView.Adapter<RemindersAdapter.MyVi
         private AppCompatTextView reminderName, reminderDateTime;
         private AppCompatCheckBox isDone;
         private AppCompatImageButton delete;
+        private LinearLayout reminderBackgroundLinearLayout;
 
         public MyViewHolder(@NonNull View itemView,final onItemCheckedListener listener,onDeletedListener deletedListener, final ArrayList<Reminders> reminders) {
             super(itemView);
@@ -63,6 +69,7 @@ public class RemindersAdapter extends RecyclerView.Adapter<RemindersAdapter.MyVi
             reminderDateTime = itemView.findViewById(R.id.reminder_date_time);
             isDone = itemView.findViewById(R.id.completed_check_box);
             delete = itemView.findViewById(R.id.delete_reminder);
+            reminderBackgroundLinearLayout = itemView.findViewById(R.id.reminder_background);
 
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -81,6 +88,11 @@ public class RemindersAdapter extends RecyclerView.Adapter<RemindersAdapter.MyVi
                     int position = getAdapterPosition();
                     if(position != RecyclerView.NO_POSITION) {
                         listener.onItemChecked(reminders.get(position), isChecked);
+                        if (isChecked) {
+                            reminderBackgroundLinearLayout.setBackgroundColor(Color.rgb(33,150,243));
+                        }else {
+                            reminderBackgroundLinearLayout.setBackgroundColor(Color.argb(48,236,236,236));
+                        }
                     }
                 }
             });
