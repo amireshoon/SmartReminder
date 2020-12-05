@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.AlarmClock;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -38,6 +39,7 @@ import java.util.Objects;
 import ap.behrouzi.smartr.database.DatabaseHelper;
 import ap.behrouzi.smartr.services.AlarmService;
 import ap.behrouzi.smartr.services.ReminderBroadcast;
+import ap.behrouzi.smartr.ui.MainActivity;
 import ap.behrouzi.smartr.utils.Jdate;
 import ap.behrouzi.smartr.utils.PDate;
 
@@ -48,7 +50,7 @@ public class AddNormalReminderActivity extends AppCompatActivity {
     AppCompatTextView timeHolderTextView, dateHolderTextView;
     AppCompatButton submitButton;
     AppCompatCheckBox shanbeh, doShanbeh, yekShanbeh, seShanbeh, chShanbeh, panjShanbeh, jome;
-    SwitchCompat alarmCombat;
+    SwitchCompat alarmCombat, repeat;
     Jdate.DateFormat dates;
     String[] time = new String[2];
     int[] dw;
@@ -73,7 +75,7 @@ public class AddNormalReminderActivity extends AppCompatActivity {
         panjShanbeh = findViewById(R.id.p_sh);
         jome = findViewById(R.id.jome);
         alarmCombat = findViewById(R.id.switch_alarm);
-
+        repeat = findViewById(R.id.every_week_switch);
         findViewById(R.id.back_button).setOnClickListener( v -> {
             finish();
         });
@@ -195,79 +197,19 @@ public class AddNormalReminderActivity extends AppCompatActivity {
         return s.toString().trim();
     }
 
-    @SuppressLint({"SimpleDateFormat", "ShortAlarm"})
     private void addReminder(int hour, int min, int day, int mon, int year, String link, String name, int id) {
-//        String str_date=mon+"-"+day+"-"+year+" "+hour+":"+min+":"+"00";
-//        @SuppressLint("SimpleDateFormat") DateFormat formatter = new SimpleDateFormat("MM-dd-yyyy kk:mm:ss");
-//        Date date = null;
-//        try {
-//            date = (Date)formatter.parse(str_date);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        assert date != null;
-//        long output=date.getTime()/1000L;
-//        String str=Long.toString(output);
-//        long timestamp = Long.parseLong(str) * 1000;
-//        long curr = System.currentTimeMillis();
-//        Log.e("TIME", "addReminder: Curr: " + curr + " / then: " + timestamp);
-//        Intent intent = new Intent(AddNormalReminderActivity.this, ReminderBroadcast.class);
-//        intent.putExtra("reminder_id", id);
-//        intent.putExtra("reminder_name", name);
-//        intent.putExtra("reminder_link", link);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(AddNormalReminderActivity.this,0,intent,0);
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-
-//        Intent intent = new Intent(this, ReminderBroadcast.class);
-//        intent.putExtra("reminder_id", id);
-//        intent.putExtra("reminder_name", name);
-//        intent.putExtra("reminder_link", link);
-//        PendingIntent pending = PendingIntent.getBroadcast(this, id, intent, PendingIntent.FLAG_ONE_SHOT);
-//        AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//        long epoch = 0;
-//        PersianCalendar persianCalendar = new PersianCalendar();
-//        try {
-//            epoch = Objects.requireNonNull(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").parse(dw[1] + "/" + dw[2] +"/" +dw[0]+ " " + hour + ":"+min+":00")).getTime() / 1000;
-//            Log.e("TIME", "onDateSet:On " + epoch);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        alarm.setRepeating(AlarmManager.RTC_WAKEUP, epoch, 60000, pending);
-//
-////        alarmManager.set(AlarmManager.RTC_WAKEUP,
-////                timestamp,
-////                pendingIntent);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            alarm.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,epoch,pending);
-//        }else {
-//            alarm.set(AlarmManager.RTC_WAKEUP,
-//                timestamp,
-//                    pending);
-//        }
-//        Toast.makeText(AddNormalReminderActivity.this, "Heyyyyyyy", Toast.LENGTH_SHORT).show();
-//        Log.e("ERROR", "Set time: " + epoch);
-         AlarmManager alarmMgr;
-         PendingIntent alarmIntent;
-        alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(AddNormalReminderActivity.this, ReminderBroadcast.class);
-        alarmIntent = PendingIntent.getBroadcast(AddNormalReminderActivity.this, 0, intent, 0);
-
-// Set the alarm to start at 8:30 a.m.
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, min);
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-        calendar.set(Calendar.MONTH, mon);
-//        Toast.makeText(this, Integer.toString(min), Toast.LENGTH_SHORT).show();
-        Log.e("TIME", "addReminder: " + calendar.getTimeInMillis());
-
-// setRepeating() lets you specify a precise custom interval--in this case,
-// 20 minutes.
-        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                1000 * 60 * 20, alarmIntent);
-
+        Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
+        intent.putExtra(AlarmClock.EXTRA_MESSAGE, name);
+        intent.putExtra(AlarmClock.EXTRA_HOUR, hour);
+        intent.putExtra(AlarmClock.EXTRA_MINUTES, min);
+        intent.putExtra(AlarmClock.EXTRA_SKIP_UI,true);
+        if (repeat.isChecked()) {
+            ArrayList<Integer> integers = new ArrayList<>();
+            Toast.makeText(this, dayOfWeek, Toast.LENGTH_SHORT).show();
+            integers.add(Jdate.getDayOfWeek(dayOfWeek));
+            intent.putExtra(AlarmClock.EXTRA_DAYS, integers);
+        }
+        startActivity(intent);
         finish();
     }
 }
