@@ -8,6 +8,7 @@ import android.app.NotificationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -16,6 +17,7 @@ import java.util.Calendar;
 import ap.behrouzi.smartr.R;
 import ap.behrouzi.smartr.adapters.ViewPagerAdapter;
 import ap.behrouzi.smartr.fragments.DaysFragment;
+import ap.behrouzi.smartr.utils.Jdate;
 import ap.behrouzi.smartr.utils.Splash;
 
 public class MainActivity extends AppCompatActivity {
@@ -64,9 +66,7 @@ public class MainActivity extends AppCompatActivity {
             viewPagerAdapter.addFragment(jome, "جمعه");
             viewPager.setAdapter(viewPagerAdapter);
             tabLayout.setupWithViewPager(viewPager);
-            Calendar calendar = Calendar.getInstance();
-            int day = calendar.get(Calendar.DAY_OF_WEEK);
-            viewPager.setCurrentItem(day,true);
+            viewPager.setCurrentItem(Jdate.DAY_OF_WEEK(),true);
         });
 
     }

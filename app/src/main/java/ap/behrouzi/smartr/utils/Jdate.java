@@ -73,8 +73,6 @@ public class Jdate {
 
     public static String getDayOfWeek(int preferDay) {
         switch (preferDay) {
-            case 0:
-                return "shanbeh";
             case 1:
                 return "1shanbeh";
             case 2:
@@ -89,6 +87,26 @@ public class Jdate {
                 return "jome";
             default:
                 return "shanbeh";
+        }
+    }
+
+    public static int DAY_OF_WEEK() {
+        Calendar calendar = Calendar.getInstance();
+        switch (calendar.get(Calendar.DAY_OF_WEEK)) {
+            case 1:
+                return 2;
+            case 2:
+                return 3;
+            case 3:
+                return 4;
+            case 4:
+                return 5;
+            case 5:
+                return 6;
+            case 6:
+                return 7;
+            default:
+                return 0;
         }
     }
 
