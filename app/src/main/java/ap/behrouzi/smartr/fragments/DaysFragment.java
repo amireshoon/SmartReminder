@@ -31,6 +31,7 @@ import ap.behrouzi.smartr.R;
 import ap.behrouzi.smartr.adapters.RemindersAdapter;
 import ap.behrouzi.smartr.dataModels.Reminders;
 import ap.behrouzi.smartr.database.DatabaseHelper;
+import ap.behrouzi.smartr.ui.MapAddActivity;
 import ap.behrouzi.smartr.utils.Jdate;
 
 public class DaysFragment extends Fragment {
@@ -60,6 +61,12 @@ public class DaysFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.row_days, container,false);
         FloatingActionButton floatingActionButton = view.findViewById(R.id.floatingActionButton);
+
+        view.findViewById(R.id.floatingActionButton2).setOnClickListener( v -> {
+            startActivityForResult(new Intent(getActivity(), MapAddActivity.class), 123);
+        });
+
+
         floatingActionButton.setOnClickListener( v-> {
             Intent intent = new Intent(getActivity(), AddNormalReminderActivity.class);
             intent.putExtra("from", getArguments().getInt("day", 0));

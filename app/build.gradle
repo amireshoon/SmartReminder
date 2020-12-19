@@ -12,7 +12,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -43,4 +43,6 @@ dependencies {
     def lottieVersion = "3.4.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
     implementation 'ir.map:map-sdk:4.0.2'
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
+    implementation 'com.android.support:multidex:1.0.3'
 }

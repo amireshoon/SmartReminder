@@ -1,11 +1,15 @@
 package ap.behrouzi.smartr.ui;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -23,6 +27,7 @@ import ap.behrouzi.smartr.R;
 import ap.behrouzi.smartr.adapters.ViewPagerAdapter;
 import ap.behrouzi.smartr.fragments.DaysFragment;
 import ap.behrouzi.smartr.services.AlarmDetector;
+import ap.behrouzi.smartr.services.MapServiceJob;
 import ap.behrouzi.smartr.utils.Jdate;
 import ap.behrouzi.smartr.utils.Splash;
 
@@ -72,7 +77,24 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
 
-        startActivity(new Intent(MainActivity.this, MapAddActivity.class));
+    }
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+            if (resultCode == RESULT_OK) {
+                try {
+                    if (data.getBooleanExtra("map",false)) {
+                        Log.e("ERROR", "onActivityResult: " + data.getDoubleExtra("lat", 0));
+                        Log.e("ERROR", "onActivityResult: " + data.getDoubleExtra("lon", 0));
+                        // Here we should add reminder to db
+                        Intent intent = new Intent(this, MapServiceJob.class);
+                        startService(intent);
+                    }
+                }catch (Exception e) {
+                    Toast.makeText(this, "مشکلی در ایجاد یادآور بوجود آمد!", Toast.LENGTH_SHORT).show();
+                }
+            }
     }
 
     public void getTabs() {
@@ -94,7 +116,8 @@ public class MainActivity extends AppCompatActivity {
             viewPagerAdapter.addFragment(jome, "جمعه");
             viewPager.setAdapter(viewPagerAdapter);
             tabLayout.setupWithViewPager(viewPager);
-            viewPager.setCurrentItem(Jdate.DAY_OF_WEEK(),true);
+            Calendar calendar = Calendar.getInstance();
+            viewPager.setCurrentItem(calendar.get(Calendar.DAY_OF_WEEK),true);
         });
 
     }
