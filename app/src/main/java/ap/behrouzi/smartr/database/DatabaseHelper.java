@@ -134,4 +134,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
+    public void createMapReminder(double lat, double lon) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        String query2 =
+                "CREATE TABLE IF NOT EXISTS " + "map_reminder" +
+                        " (" + "map_id" + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "map_lat" + " DOUBLE, " +
+                        "map_lon" + " DOUBLE, " +
+                        "is_done" + " BOOLEAN);";
+        db.execSQL(query2);
+        cv.put("map_lat", lat);
+        cv.put("map_lon", lon);
+        cv.put("is_done", false);
+        long result = db.insert("map_reminder", null, cv);
+        if (result == -1) {
+            Toast.makeText(this.context, "Failed", Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(this.context, "Success", Toast.LENGTH_LONG).show();
+        }
+    }
 }

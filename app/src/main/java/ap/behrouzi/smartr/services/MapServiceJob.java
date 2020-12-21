@@ -71,7 +71,24 @@ public class MapServiceJob extends Service implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         // Here we should get all of the map reminders and check for matching one
-        Toast.makeText(this, "On location change " + location.getAltitude() + " / " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "On location change " + location.getAltitude() + " / " + location.getLongitude(), Toast.LENGTH_SHORT).show();
+
+
+
+// For creating range
+//        int rEarth = 6378;
+//        double pi = 3.141592653589793;
+//        double rightLat = location.getLatitude() + (1d / rEarth) * (180 / pi);
+//        double rightLon = location.getLongitude() + (1d / rEarth) * (180 / pi) / Math.cos(location.getLatitude() * pi / 180);
+//
+//        double leftLat = location.getLatitude() - (1d / rEarth) * (180 / pi);
+//        double leftLon = location.getLongitude() - (1d / rEarth) * (180 / pi) / Math.cos(location.getLatitude() * pi / 180);
+//        Log.i("LOCATION", "originalLat => " + location.getLatitude());
+//        Log.i("LOCATION", "originalLong => " + location.getLongitude());
+//        Log.i("LOCATION", "leftLat => " + leftLat);
+//        Log.i("LOCATION", "rightLat => " + rightLat);
+//        Log.i("LOCATION", "leftLong => " + leftLon);
+//        Log.i("LOCATION", "rightLong => " + rightLon);
     }
 
     @Override

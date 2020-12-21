@@ -25,6 +25,7 @@ import java.util.Calendar;
 
 import ap.behrouzi.smartr.R;
 import ap.behrouzi.smartr.adapters.ViewPagerAdapter;
+import ap.behrouzi.smartr.database.DatabaseHelper;
 import ap.behrouzi.smartr.fragments.DaysFragment;
 import ap.behrouzi.smartr.services.AlarmDetector;
 import ap.behrouzi.smartr.services.MapServiceJob;
@@ -88,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("ERROR", "onActivityResult: " + data.getDoubleExtra("lat", 0));
                         Log.e("ERROR", "onActivityResult: " + data.getDoubleExtra("lon", 0));
                         // Here we should add reminder to db
+                        DatabaseHelper databaseHelper = new DatabaseHelper(MainActivity.this);
+                        databaseHelper.createMapReminder(data.getDoubleExtra("lat", 0), data.getDoubleExtra("lon", 0));
                         Intent intent = new Intent(this, MapServiceJob.class);
                         startService(intent);
                     }
