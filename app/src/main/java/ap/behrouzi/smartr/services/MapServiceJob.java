@@ -8,6 +8,7 @@ import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -30,8 +31,12 @@ import com.google.android.gms.location.LocationServices;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import ap.behrouzi.smartr.database.DatabaseHelper;
 
 
 public class MapServiceJob extends Service implements LocationListener {
@@ -46,7 +51,7 @@ public class MapServiceJob extends Service implements LocationListener {
     long notify_interval = 1000;
     public static String str_receiver = "servicetutorial.service.receiver";
     Intent intent;
-
+    private List<LatLngDataModel> latLngDataModels;
 
     public MapServiceJob() {
 
@@ -66,15 +71,33 @@ public class MapServiceJob extends Service implements LocationListener {
         mTimer.schedule(new TimerTaskToGetLocation(), 5, notify_interval);
         intent = new Intent(str_receiver);
 //        fn_getlocation();
+        latLngDataModels = new ArrayList<>();
+        DatabaseHelper databaseHelper = new DatabaseHelper(MapServiceJob.this);
+        Cursor cursor = databaseHelper.getAllMapReminders();
+        if (cursor.getCount() <= 0) {
+            onDestroy();
+        }
+
+        while(cursor.moveToNext()) {
+            LatLngDataModel latLngDataModel = new LatLngDataModel();
+            latLngDataModel.setLat(cursor.getDouble(cursor.getColumnIndex("map_lat")));
+            latLngDataModel.setLon(cursor.getDouble(cursor.getColumnIndex("map_lon")));
+            latLngDataModels.add(latLngDataModel);
+        }
     }
 
     @Override
     public void onLocationChanged(Location location) {
         // Here we should get all of the map reminders and check for matching one
 //        Toast.makeText(this, "On location change " + location.getAltitude() + " / " + location.getLongitude(), Toast.LENGTH_SHORT).show();
-
-
-
+        for (int i = 0; i <= latLngDataModels.size() - 1; i ++) {
+            if (location.getLatitude() == latLngDataModels.get(i).getLat() && location.getLongitude() == latLngDataModels.get(i).getLon()) {
+                Toast.makeText(MapServiceJob.this, "You did it", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(MapServiceJob.this, "Sorry", Toast.LENGTH_SHORT).show();
+            }
+        }
+//        Log.i("LOCATION", latLngDataModels);
 // For creating range
 //        int rEarth = 6378;
 //        double pi = 3.141592653589793;
@@ -174,5 +197,26 @@ public class MapServiceJob extends Service implements LocationListener {
         intent.putExtra("latutide", location.getLatitude() + "");
         intent.putExtra("longitude", location.getLongitude() + "");
         sendBroadcast(intent);
+    }
+}
+
+class LatLngDataModel {
+    private double lat;
+    private double lon;
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
     }
 }

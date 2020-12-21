@@ -7,7 +7,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -153,5 +159,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }else {
             Toast.makeText(this.context, "Success", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public Cursor getAllMapReminders() {
+        String query = "SELECT * FROM " + "map_reminder WHERE is_done = 'false'";
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if (db != null) {
+            cursor = db.rawQuery(query, null);
+        }
+
+        return cursor;
     }
 }
