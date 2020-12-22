@@ -162,7 +162,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getAllMapReminders() {
-        String query = "SELECT * FROM " + "map_reminder WHERE is_done = 'false'";
+        String query = "SELECT * FROM " + "map_reminder WHERE `is_done` = '0'";
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = null;
@@ -171,5 +171,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         return cursor;
+    }
+
+    public void markMapAsDone(int id) {
+        String query = "UPDATE " + "map_reminder" + " SET " + "`is_done`" + " = '" + "1" + "' WHERE " + "`map_id`" + " = " + id;
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(query);
     }
 }
