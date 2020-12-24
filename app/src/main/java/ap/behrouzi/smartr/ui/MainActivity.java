@@ -79,26 +79,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-            if (resultCode == RESULT_OK) {
-                try {
-                    if (data.getBooleanExtra("map",false)) {
-                        Log.e("ERROR", "onActivityResult: " + data.getDoubleExtra("lat", 0));
-                        Log.e("ERROR", "onActivityResult: " + data.getDoubleExtra("lon", 0));
-                        // Here we should add reminder to db
-                        DatabaseHelper databaseHelper = new DatabaseHelper(MainActivity.this);
-                        databaseHelper.createMapReminder(data.getDoubleExtra("lat", 0), data.getDoubleExtra("lon", 0));
-                        Intent intent = new Intent(this, MapServiceJob.class);
-                        startService(intent);
-                    }
-                }catch (Exception e) {
-                    Toast.makeText(this, "مشکلی در ایجاد یادآور بوجود آمد!", Toast.LENGTH_SHORT).show();
-                }
-            }
-    }
+
 
     public void getTabs() {
         final ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());

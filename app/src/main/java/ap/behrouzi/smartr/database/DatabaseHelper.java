@@ -173,8 +173,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public Cursor getAllMapRemindersForRecycle() {
+        String query = "SELECT * FROM " + "map_reminder";
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if (db != null) {
+            cursor = db.rawQuery(query, null);
+        }
+
+        return cursor;
+    }
+
     public void markMapAsDone(int id) {
         String query = "UPDATE " + "map_reminder" + " SET " + "`is_done`" + " = '" + "1" + "' WHERE " + "`map_id`" + " = " + id;
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(query);
+    }
+
+    public void markMapAsDone(int id, boolean status) {
+        int st = 0;
+        if (status) {
+            st = 1;
+        }
+        String query = "UPDATE " + "map_reminder" + " SET " + "`is_done`" + " = '" + st + "' WHERE " + "`map_id`" + " = " + id;
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(query);
+    }
+
+    public void removeMapReminder(int id) {
+        String query = "DELETE FROM " + "map_reminder" + " WHERE `map_id` = " + "'" + id +"'";
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(query);
     }
