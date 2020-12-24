@@ -137,6 +137,13 @@ public class DaysFragment extends Fragment {
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
         });
+
+        remindersAdapter.setOnEditListener((reminders, position) -> {
+            Intent myIn = new Intent(getActivity(), AddNormalReminderActivity.class);
+            myIn.putExtra("isEdit", true);
+            myIn.putExtra("reminder_id", reminders.getId());
+            startActivity(myIn);
+        });
         return view;
     }
 

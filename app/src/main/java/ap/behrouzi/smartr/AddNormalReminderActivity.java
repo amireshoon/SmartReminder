@@ -14,9 +14,12 @@ import android.app.KeyguardManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.AlarmClock;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -36,6 +39,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Objects;
 
+import ap.behrouzi.smartr.dataModels.Reminders;
 import ap.behrouzi.smartr.database.DatabaseHelper;
 import ap.behrouzi.smartr.services.AlarmService;
 import ap.behrouzi.smartr.services.ReminderBroadcast;
@@ -55,6 +59,8 @@ public class AddNormalReminderActivity extends AppCompatActivity {
     String[] time = new String[2];
     int[] dw;
     String dayOfWeek = "";
+    boolean isTimeSelected = false;
+    Reminders editReminder = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +85,25 @@ public class AddNormalReminderActivity extends AppCompatActivity {
         findViewById(R.id.back_button).setOnClickListener( v -> {
             finish();
         });
+        DatabaseHelper databaseHelper = new DatabaseHelper(AddNormalReminderActivity.this);
         Intent intent = getIntent();
+        if (intent.getBooleanExtra("isEdit", false)) {
+            Toast.makeText(this, "Edit", Toast.LENGTH_SHORT).show();
+            editReminder = databaseHelper.getSingleReminder(intent.getIntExtra("reminder_id", 0));
+            reminderNameEditText.setText(editReminder.getName());
+            timeHolderTextView.setText(editReminder.getTime().replace("-",":"));
+            reminderLinkEditText.setText(editReminder.getExtra2());
+            if (editReminder.getAlarm().equals("yes")) {
+                alarmCombat.setChecked(true);
+            }
+            if (editReminder.getRepeat().equals("yes")) {
+                repeat.setChecked(true);
+            }
+            time[0] = Integer.toString(Integer.parseInt(editReminder.getTime().split("-")[0]));
+            time[1] = Integer.toString(Integer.parseInt(editReminder.getTime().split("-")[1]));
+            isTimeSelected = true;
+            checkFields();
+        }
         dayOfWeek = intent.getStringExtra("whichDay");
         timeChooser.setOnClickListener( v-> {
             Calendar c = Calendar.getInstance();
@@ -90,6 +114,8 @@ public class AddNormalReminderActivity extends AppCompatActivity {
                     time[0] = String.valueOf(hourOfDay);
                     time[1] = String.valueOf(minute);
                     timeHolderTextView.setText(hourOfDay + ":" + minute);
+                    isTimeSelected = true;
+                    checkFields();
                 }
             },c.get(Calendar.HOUR_OF_DAY),c.get(Calendar.MINUTE),true);
             timePickerDialog.show(getFragmentManager(), "TimepickerDialog");
@@ -126,34 +152,95 @@ public class AddNormalReminderActivity extends AppCompatActivity {
         });
 
         submitButton.setOnClickListener( v -> {
-            if (time[0] == null || time[1] == null  || reminderNameEditText.getText().toString().equals("")) {
-                Toast.makeText(AddNormalReminderActivity.this, "نام و زمان هشدار الزامی میباشد!", Toast.LENGTH_SHORT).show();
-                if (reminderNameEditText.getText().toString().equals("")) {
-                    reminderNameEditText.setError("نام هشدار اجباری میباشد!");
+            if (intent.getBooleanExtra("isEdit", false)) {
+                if (time[0] == null || time[1] == null  || reminderNameEditText.getText().toString().equals("")) {
+                    Toast.makeText(AddNormalReminderActivity.this, "نام و زمان هشدار الزامی میباشد!", Toast.LENGTH_SHORT).show();
+                    if (reminderNameEditText.getText().toString().equals("")) {
+                        reminderNameEditText.setError("نام هشدار اجباری میباشد!");
+                    }
+                }else {
+
+                    String alarm = "no";
+                    if (alarmCombat.isChecked()) {
+                        alarm = "yes";
+                    }
+                    String repeat2 = "no";
+                    if (repeat.isChecked()) {
+                        repeat2 = "yes";
+                    }
+                    databaseHelper.updateReminder(
+                            Objects.requireNonNull(reminderNameEditText.getText()).toString().trim(),
+                            time[0] + "-" + time[1],
+                            repeat2,
+                            editReminder.getDate(), //dw[0] + "-" + dw[1] + "-" + dw[2]
+                            "no",
+                            reminderLinkEditText.getText().toString().trim(),
+                            "",
+                            "no",
+                            alarm,
+                            Integer.toString(intent.getIntExtra("reminder_id", 0))
+                    );
                 }
+                finish();
+//                addReminder(Integer.parseInt(time[0]), Integer.parseInt(time[1]), 0, 0, 0,reminderLinkEditText.getText().toString().trim(), reminderNameEditText.getText().toString().trim(),databaseHelper.getLatestRecord());
             }else {
-                DatabaseHelper databaseHelper = new DatabaseHelper(AddNormalReminderActivity.this);
-                String alarm = "no";
-                if (alarmCombat.isChecked()) {
-                    alarm = "yes";
-                }
-                databaseHelper.addNormalReminder(
-                        Objects.requireNonNull(reminderNameEditText.getText()).toString().trim(),
-                        time[0] + "-" + time[1],
-                        separateComma(getRepeatMode()),
-                        dayOfWeek, //dw[0] + "-" + dw[1] + "-" + dw[2]
-                        "no",
-                        reminderLinkEditText.toString().trim(),
-                        "",
-                        "no",
-                        alarm
-                );
+                if (time[0] == null || time[1] == null  || reminderNameEditText.getText().toString().equals("")) {
+                    Toast.makeText(AddNormalReminderActivity.this, "نام و زمان هشدار الزامی میباشد!", Toast.LENGTH_SHORT).show();
+                    if (reminderNameEditText.getText().toString().equals("")) {
+                        reminderNameEditText.setError("نام هشدار اجباری میباشد!");
+                    }
+                }else {
+
+                    String alarm = "no";
+                    if (alarmCombat.isChecked()) {
+                        alarm = "yes";
+                    }
+                    String repeat2 = "no";
+                    if (repeat.isChecked()) {
+                        repeat2 = "yes";
+                    }
+                    databaseHelper.addNormalReminder(
+                            Objects.requireNonNull(reminderNameEditText.getText()).toString().trim(),
+                            time[0] + "-" + time[1],
+                            repeat2,
+                            dayOfWeek, //dw[0] + "-" + dw[1] + "-" + dw[2]
+                            "no",
+                            reminderLinkEditText.getText().toString().trim(),
+                            "",
+                            "no",
+                            alarm
+                    );
 
 //                addReminder(Integer.parseInt(time[0]), Integer.parseInt(time[1]), dw[2], dw[1], dw[0],reminderLinkEditText.getText().toString().trim(), reminderNameEditText.getText().toString().trim(),databaseHelper.getLatestRecord());
-                addReminder(Integer.parseInt(time[0]), Integer.parseInt(time[1]), 0, 0, 0,reminderLinkEditText.getText().toString().trim(), reminderNameEditText.getText().toString().trim(),databaseHelper.getLatestRecord());
+                    addReminder(Integer.parseInt(time[0]), Integer.parseInt(time[1]), 0, 0, 0,reminderLinkEditText.getText().toString().trim(), reminderNameEditText.getText().toString().trim(),databaseHelper.getLatestRecord());
+                }
+
             }
-            
+
         });
+        reminderNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkFields();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    private void checkFields() {
+        if (!Objects.requireNonNull(reminderNameEditText.getText()).toString().trim().isEmpty() && isTimeSelected) {
+            submitButton.setEnabled(true);
+            submitButton.setBackgroundColor(Color.rgb(29,161,242));
+        }
     }
 
     private ArrayList<Integer> getRepeatMode() {

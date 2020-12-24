@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ap.behrouzi.smartr.dataModels.Reminders;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private Context context;
@@ -103,6 +105,55 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor = db.rawQuery(query, null);
         }
         return cursor;
+    }
+
+    public Reminders getSingleReminder(int id) {
+        Reminders reminders = null;
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + "_id" + " = '" + id + "' LIMIT 1";
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if (db != null) {
+            cursor = db.rawQuery(query, null);
+        }
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                reminders = new Reminders(
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(7),
+                        cursor.getString(5),
+                        cursor.getString(6),
+                        cursor.getString(8),
+                        cursor.getString(4),
+                        cursor.getString(3),
+                        cursor.getString(8),
+                        cursor.getInt(0)
+                );
+            }
+        }
+        return reminders;
+    }
+
+    public void updateReminder(String rName, String rTime, String rRepeat, String rDate, String rDone, String rE2, String rLocation, String rIsLocational, String alarm, String rId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+
+        cv.put(C_NAME, rName);
+        cv.put(C_TIME, rTime);
+        cv.put(C_REPEAT, rRepeat);
+        cv.put(C_DATE, rDate);
+        cv.put(C_DONE, rDone);
+        cv.put(C_EXTRA_2, rE2);
+        cv.put(C_LOCATION, rLocation);
+        cv.put(C_IS_LOCATIONAL, rIsLocational);
+        cv.put(C_ALARM, alarm);
+        long result = db.update(TABLE_NAME, cv, C_ID + " = ?", new String[]{rId});
+        if (result == -1) {
+            Toast.makeText(this.context, "Failed", Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(this.context, "Success", Toast.LENGTH_LONG).show();
+        }
     }
 
     public int getLatestRecord() {

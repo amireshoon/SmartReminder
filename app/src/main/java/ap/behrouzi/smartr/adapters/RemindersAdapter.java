@@ -27,6 +27,7 @@ public class RemindersAdapter extends RecyclerView.Adapter<RemindersAdapter.MyVi
     private ArrayList<Reminders> reminders;
     private onItemCheckedListener checkedListener;
     private onDeletedListener deletedListener;
+    private onEditListener editListener;
     public RemindersAdapter(Context context, ArrayList<Reminders> reminder) {
         this.reminders = reminder;
         this.context = context;
@@ -37,7 +38,7 @@ public class RemindersAdapter extends RecyclerView.Adapter<RemindersAdapter.MyVi
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.reminder_card, parent, false);
-        return new MyViewHolder(view, checkedListener,deletedListener, this.reminders);
+        return new MyViewHolder(view, checkedListener,deletedListener, this.reminders, editListener);
     }
 
     @Override
@@ -48,6 +49,10 @@ public class RemindersAdapter extends RecyclerView.Adapter<RemindersAdapter.MyVi
         holder.isDone.setChecked(reminders.get(position).getDone().equals("yes"));
         if (holder.isDone.isChecked()) {
             holder.reminderBackgroundLinearLayout.setBackgroundColor(Color.rgb(33,150,243));
+        }
+
+        if (!reminders.get(position).getIsLocational().equals("yes")) {
+            holder.edit.setVisibility(View.VISIBLE);
         }
     }
 
@@ -62,14 +67,16 @@ public class RemindersAdapter extends RecyclerView.Adapter<RemindersAdapter.MyVi
         private AppCompatCheckBox isDone;
         private AppCompatImageButton delete;
         private LinearLayout reminderBackgroundLinearLayout;
+        private AppCompatImageButton edit;
 
-        public MyViewHolder(@NonNull View itemView,final onItemCheckedListener listener,onDeletedListener deletedListener, final ArrayList<Reminders> reminders) {
+        public MyViewHolder(@NonNull View itemView,final onItemCheckedListener listener,onDeletedListener deletedListener, final ArrayList<Reminders> reminders, onEditListener editListener) {
             super(itemView);
             reminderName = itemView.findViewById(R.id.reminder_name);
             reminderDateTime = itemView.findViewById(R.id.reminder_date_time);
             isDone = itemView.findViewById(R.id.completed_check_box);
             delete = itemView.findViewById(R.id.delete_reminder);
             reminderBackgroundLinearLayout = itemView.findViewById(R.id.reminder_background);
+            edit = itemView.findViewById(R.id.edit_reminder);
 
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -96,6 +103,15 @@ public class RemindersAdapter extends RecyclerView.Adapter<RemindersAdapter.MyVi
                     }
                 }
             });
+
+            edit.setOnClickListener( v -> {
+                if (editListener != null) {
+                    int position = getAdapterPosition();
+                    if(position != RecyclerView.NO_POSITION) {
+                        editListener.onEdit(reminders.get(position), position);
+                    }
+                }
+            });
         }
     }
 
@@ -114,5 +130,13 @@ public class RemindersAdapter extends RecyclerView.Adapter<RemindersAdapter.MyVi
 
     public void setOnDeletedListener(onDeletedListener listener) {
         deletedListener = listener;
+    }
+
+    public interface onEditListener {
+        void onEdit(Reminders reminders, int position);
+    }
+
+    public void setOnEditListener(onEditListener listener) {
+        editListener = listener;
     }
 }

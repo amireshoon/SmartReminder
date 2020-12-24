@@ -344,6 +344,7 @@
             android:layout_height="wrap_content"
             android:text="ثبت"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            android:enabled="false"/>
     </LinearLayout>
 </ScrollView>

@@ -101,7 +101,7 @@ public class MapRemindersActivity extends AppCompatActivity {
 
         }else {
             while (cursor.moveToNext()) {
-                reminders.add(new Reminders(Double.toString(cursor.getDouble(cursor.getColumnIndex("map_lat"))) + Double.toString(cursor.getDouble(cursor.getColumnIndex("map_lon"))),"","","","","","","","",cursor.getInt(cursor.getColumnIndex("map_id"))));
+                reminders.add(new Reminders(Double.toString(cursor.getDouble(cursor.getColumnIndex("map_lat"))) + Double.toString(cursor.getDouble(cursor.getColumnIndex("map_lon"))),"","","","yes","","","","",cursor.getInt(cursor.getColumnIndex("map_id"))));
             }
         }
 

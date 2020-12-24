@@ -36,6 +36,16 @@
         android:layout_marginEnd="10dp"/>
 
     <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/edit_reminder"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        app:srcCompat="@drawable/ic_baseline_edit_24"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_gravity="center_vertical"
+        android:tint="#474747"
+        android:visibility="gone"/>
+
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/delete_reminder"
         android:layout_width="32dp"
         android:layout_height="32dp"
