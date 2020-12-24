@@ -14,7 +14,8 @@
         app:mapbox_cameraZoomMin="1"
         android:foreground="@color/black"/>
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/map_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -24,7 +25,7 @@
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
         android:background="@drawable/rounded_white_back"
-        android:text="منطقه مورد نظر خود را انتخاب کنید."/>
+        android:hint="توضیحات یاد آور را اینجا وارد کنید"/>
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/close_btn"

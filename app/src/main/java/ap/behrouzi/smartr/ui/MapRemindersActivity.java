@@ -118,7 +118,7 @@ public class MapRemindersActivity extends AppCompatActivity {
                     Log.e("ERROR", "onActivityResult: " + data.getDoubleExtra("lon", 0));
                     // Here we should add reminder to db
                     DatabaseHelper databaseHelper = new DatabaseHelper(MapRemindersActivity.this);
-                    databaseHelper.createMapReminder(data.getDoubleExtra("lat", 0), data.getDoubleExtra("lon", 0));
+                    databaseHelper.createMapReminder(data.getDoubleExtra("lat", 0), data.getDoubleExtra("lon", 0), data.getStringExtra("desc"));
                     Intent intent = new Intent(this, MapServiceJob.class);
                     startService(intent);
                 }

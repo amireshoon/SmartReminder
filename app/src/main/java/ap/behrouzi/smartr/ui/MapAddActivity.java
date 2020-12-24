@@ -2,6 +2,7 @@ package ap.behrouzi.smartr.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -68,6 +69,7 @@ public class MapAddActivity extends AppCompatActivity {
     MapView mapView;
     LatLng lastKnowLatLng = null;
     Boolean pointAdded = false;
+    AppCompatEditText desc;
     private LocationEngine locationEngine;
     // These are two number to handle interval of location update and its delay
     private long DEFAULT_INTERVAL_IN_MILLISECONDS = 1000L;
@@ -181,7 +183,7 @@ public class MapAddActivity extends AppCompatActivity {
         findViewById(R.id.close_btn).setOnClickListener(v -> {
             finish();
         });
-
+        desc = findViewById(R.id.map_description);
         mapView = findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(new OnMapReadyCallback() {
@@ -246,6 +248,9 @@ public class MapAddActivity extends AppCompatActivity {
         data.putExtra("map", true);
         data.putExtra("lat", latLng.getLatitude());
         data.putExtra("lon", latLng.getLongitude());
+        if (!desc.getText().toString().trim().isEmpty()) {
+            data.putExtra("desc", desc.getText().toString().trim());
+        }
         setResult(RESULT_OK,data);
         finish();
     }

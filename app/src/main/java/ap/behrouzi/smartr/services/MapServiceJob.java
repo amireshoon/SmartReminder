@@ -94,6 +94,7 @@ public class MapServiceJob extends Service implements LocationListener {
             latLngDataModel.setLat(cursor.getDouble(cursor.getColumnIndex("map_lat")));
             latLngDataModel.setLon(cursor.getDouble(cursor.getColumnIndex("map_lon")));
             latLngDataModel.setId(cursor.getInt(cursor.getColumnIndex("map_id")));
+            latLngDataModel.setDesc(cursor.getString(cursor.getColumnIndex("map_desc")));
             latLngDataModels.add(latLngDataModel);
         }
     }
@@ -121,7 +122,7 @@ public class MapServiceJob extends Service implements LocationListener {
                 NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) createChannel(mNotifyManager);
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(MapServiceJob.this, "mymapchannel").setSmallIcon(android.R.drawable.stat_sys_warning).setColor
-                        (ContextCompat.getColor(MapServiceJob.this, R.color.reminderDoneColor)).setContentTitle("به محدوده وارد شدید!").setContentText("شما به محدود انتخابی خود وارد شدید!");
+                        (ContextCompat.getColor(MapServiceJob.this, R.color.reminderDoneColor)).setContentTitle("به محدوده وارد شدید!").setContentText(latLngDataModels.get(i).getDesc());
                 mNotifyManager.notify(latLngDataModels.get(i).getId(), mBuilder.build());
                 // Marking reminder as done
                 DatabaseHelper databaseHelper = new DatabaseHelper(MapServiceJob.this);
@@ -232,6 +233,7 @@ public class MapServiceJob extends Service implements LocationListener {
 class LatLngDataModel {
     private double lat;
     private double lon;
+    private String desc;
     private int    id;
     public double getLon() {
         return lon;
@@ -255,5 +257,13 @@ class LatLngDataModel {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

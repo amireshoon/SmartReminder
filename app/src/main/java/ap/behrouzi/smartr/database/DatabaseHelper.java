@@ -191,7 +191,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
-    public void createMapReminder(double lat, double lon) {
+    public void createMapReminder(double lat, double lon, String desc) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         String query2 =
@@ -199,10 +199,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         " (" + "map_id" + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "map_lat" + " DOUBLE, " +
                         "map_lon" + " DOUBLE, " +
+                        "map_desc" + " TEXT, " +
                         "is_done" + " BOOLEAN);";
         db.execSQL(query2);
         cv.put("map_lat", lat);
         cv.put("map_lon", lon);
+        cv.put("map_desc", desc);
         cv.put("is_done", false);
         long result = db.insert("map_reminder", null, cv);
         if (result == -1) {
@@ -232,6 +234,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         " (" + "map_id" + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "map_lat" + " DOUBLE, " +
                         "map_lon" + " DOUBLE, " +
+                        "map_desc" + " TEXT, " +
                         "is_done" + " BOOLEAN);";
         db.execSQL(query2);
         Cursor cursor = null;
