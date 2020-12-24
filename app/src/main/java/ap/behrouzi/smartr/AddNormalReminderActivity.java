@@ -182,6 +182,7 @@ public class AddNormalReminderActivity extends AppCompatActivity {
                     );
                 }
                 finish();
+                //TODO
 //                addReminder(Integer.parseInt(time[0]), Integer.parseInt(time[1]), 0, 0, 0,reminderLinkEditText.getText().toString().trim(), reminderNameEditText.getText().toString().trim(),databaseHelper.getLatestRecord());
             }else {
                 if (time[0] == null || time[1] == null  || reminderNameEditText.getText().toString().equals("")) {
@@ -285,6 +286,27 @@ public class AddNormalReminderActivity extends AppCompatActivity {
     }
 
     private void addReminder(int hour, int min, int day, int mon, int year, String link, String name, int id) {
+//        AlarmManager alarmMgr;
+//        PendingIntent alarmIntent;
+//        alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//        Intent intent = new Intent(AddNormalReminderActivity.this, ReminderBroadcast.class);
+//        alarmIntent = PendingIntent.getBroadcast(AddNormalReminderActivity.this, 0, intent, 0);
+//
+//// Set the alarm to start at 8:30 a.m.
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTimeInMillis(System.currentTimeMillis());
+//        calendar.set(Calendar.HOUR_OF_DAY, hour);
+//        calendar.set(Calendar.MINUTE, min);
+//        calendar.set(Calendar.DAY_OF_MONTH, day);
+//        calendar.set(Calendar.MONTH, mon);
+////        Toast.makeText(this, Integer.toString(min), Toast.LENGTH_SHORT).show();
+//        Log.e("TIME", "addReminder: " + calendar.getTimeInMillis());
+//
+//// setRepeating() lets you specify a precise custom interval--in this case,
+//// 20 minutes.
+//        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+//                1000 * 60 * 20, alarmIntent);
+
         Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
         intent.putExtra(AlarmClock.EXTRA_MESSAGE, name);
         intent.putExtra(AlarmClock.EXTRA_HOUR, hour);
