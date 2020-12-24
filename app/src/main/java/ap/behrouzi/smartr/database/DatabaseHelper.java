@@ -227,7 +227,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getAllMapRemindersForRecycle() {
         String query = "SELECT * FROM " + "map_reminder";
         SQLiteDatabase db = this.getReadableDatabase();
-
+        String query2 =
+                "CREATE TABLE IF NOT EXISTS " + "map_reminder" +
+                        " (" + "map_id" + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "map_lat" + " DOUBLE, " +
+                        "map_lon" + " DOUBLE, " +
+                        "is_done" + " BOOLEAN);";
+        db.execSQL(query2);
         Cursor cursor = null;
         if (db != null) {
             cursor = db.rawQuery(query, null);
